@@ -1,0 +1,80 @@
+// tsconfig.json: la configuración de TypeScript para este proyecto.
+// Le dice a `tsc` (el compilador) qué archivos revisar y con qué reglas.
+// Vite casi no lo usa: él solo borra los tipos y sirve el JS. El que lo
+// usa de verdad es `tsc` cuando corrés `npx tsc --noEmit` o `npm run build`.
+// Este archivo admite comentarios aunque sea .json (es "JSON con comentarios").
+{
+  "compilerOptions": {
+    // ─── ¿Para qué entorno es el código? ───────────────────────────────
+
+    // Versión de JavaScript que se asume como destino. es2023 = JS moderno,
+    // así que TS no tiene que "bajar" sintaxis nueva a sintaxis vieja.
+    "target": "es2023",
+
+    // Sistema de módulos: los `import` / `export` estándar de JS moderno.
+    "module": "esnext",
+
+    // Qué cosas "existen" para TypeScript:
+    //  - ES2023: el lenguaje (Array, Promise, String, etc.).
+    //  - DOM: lo del navegador (document, HTMLButtonElement, querySelector...).
+    // Sin "DOM", TS marcaría `document` como error.
+    "lib": ["ES2023", "DOM"],
+
+    // Tipos extra que se cargan automáticamente. "vite/client" le enseña a
+    // TS que `import "./style.css"` es válido, entre otras cosas de Vite.
+    "types": ["vite/client"],
+
+    // Permite importar archivos que no son .ts/.js (como el .css).
+    "allowArbitraryExtensions": true,
+
+    // No revisa los tipos de las librerías de node_modules, solo tu código.
+    // Hace que el chequeo sea mucho más rápido.
+    "skipLibCheck": true,
+
+    // ─── Modo "bundler": quien arma el proyecto es Vite, no tsc ───────
+
+    // Cómo busca TS los archivos de un `import`: igual que lo hace Vite.
+    "moduleResolution": "bundler",
+
+    // Permite escribir `import "./algo.ts"` con la extensión .ts.
+    "allowImportingTsExtensions": true,
+
+    // Los `import` y `export` se dejan tal cual se escribieron.
+    // Obliga a marcar con `import type` lo que es solo un tipo.
+    "verbatimModuleSyntax": true,
+
+    // Trata cada archivo como un módulo independiente, aunque no tenga
+    // `import` ni `export`. Evita choques de nombres entre archivos.
+    "moduleDetection": "force",
+
+    // ⭐ La clave de la clase: tsc NO genera archivos .js, solo revisa tipos.
+    // Por eso `npm run build` ("tsc && vite build") no deja .js sueltos:
+    // tsc corrige y Vite traduce y arma la carpeta dist/.
+    // Es lo mismo que pasar `--noEmit` en la terminal.
+    "noEmit": true,
+
+    // ─── Reglas extra de prolijidad ("linting") ─────────────────────────
+
+    // Error si declarás una variable y nunca la usás.
+    "noUnusedLocals": true,
+
+    // Error si una función recibe un parámetro que nunca usa.
+    "noUnusedParameters": true,
+
+    // Solo permite sintaxis de TS que se pueda "borrar" sin dejar código.
+    // Es la idea de "lo subrayado no se imprime": los tipos desaparecen
+    // y queda JS puro. Prohíbe cosas como `enum`, que sí generan código.
+    "erasableSyntaxOnly": true,
+
+    // En un `switch`, error si un `case` sigue de largo al siguiente sin `break`.
+    "noFallthroughCasesInSwitch": true
+
+    // ─── ¿Y el modo estricto? ───────────────────────────────────────────
+    // No aparece porque en esta versión de TypeScript (7) viene activado
+    // por defecto. Es como si estuviera escrito "strict": true.
+    // Es el tema de la próxima clase.
+  },
+
+  // Qué carpetas revisa tsc: solo src/ (no node_modules ni dist).
+  "include": ["src"]
+}
