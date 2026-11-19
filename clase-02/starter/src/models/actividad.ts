@@ -1,7 +1,9 @@
 // ─── Ejercicio 2 · type alias y unión de literales ──────────────────────
 // EstadoActividad no puede ser cualquier string.
-// Tiene que admitir solo: "disponible" | "completa" | "cancelada".
-export type EstadoActividad = string;
+
+import type { Categoria } from "./categoria";
+
+export type EstadoActividad = "disponible" | "completa" | "cancelada";
 
 export interface Actividad {
   readonly id: number;
@@ -12,12 +14,11 @@ export interface Actividad {
   descripcion?: string;
   // ─── Ejercicio 3 · composición ────────────────────────────────────────
   // Una actividad *tiene* una categoría.
-  // Agregá:  categoria: Categoria;
-  // y el import:  import type { Categoria } from "./categoria";
+  categoria: Categoria
   estado: EstadoActividad;
 }
 
-export function etiquetaEstado(estado: "disponible" | "completa" | "cancelada"): string {
+export function etiquetaEstado(estado: EstadoActividad): string {
   if (estado === "disponible") {
     return "Hay cupos";
   }
@@ -43,9 +44,8 @@ export function mostrarEtiqueta(actividad: Actividad): string {
 
 // ─── Ejercicio 7 · extends ──────────────────────────────────────────────
 // En vez de repetir las propiedades, extendé Actividad:
-//   export interface ActividadDestacada extends Actividad { destacado: true }
-export interface ActividadDestacada {
-  destacado: true;
+export interface ActividadDestacada extends Actividad {
+  destacado: boolean;
 }
 
 export function tituloDestacada(actividad: ActividadDestacada): string {

@@ -10,6 +10,7 @@ Este es el contenido de la **Semana 2** de Staff (Módulo 2 del material, págin
 |---|---|
 | [`starter/`](starter) | El proyecto como quedó con el modo estricto, más los modelos con huecos y errores a propósito. Es el punto de partida. |
 | [`completo/`](completo) | Cómo queda al terminar la clase: modelos resueltos, un catálogo en pantalla y un README que documenta las entidades. Sirve también como ejemplo de la Preentrega 2. |
+| [`apuntes/`](apuntes) | Los apuntes del pizarrón (Excalidraw). |
 | [`clase-02-typescript.pptx`](clase-02-typescript.pptx) | La presentación de la clase. |
 
 ## Cómo correr los proyectos
@@ -25,6 +26,8 @@ npx tsc --noEmit     # revisa los tipos de todo el proyecto
 > En el `starter`, `npx tsc --noEmit` muestra **10 errores**. Es a propósito: son los ejercicios de la clase. `npm run dev` anda igual, porque `main.ts` todavía no importa esos archivos.
 
 ## Lo que vimos en clase
+
+![Apuntes del pizarrón](apuntes/apuntes-clase-02.png)
 
 ### 1. Modelar datos: `interface` y `type`
 

@@ -38,6 +38,11 @@ export function puedeInscribirse(actividad: Actividad): boolean {
   return actividad.estado === "disponible" && actividad.cuposDisponibles > 0;
 }
 
+export function mostrarEtiqueta(actividad: Actividad): string {
+  // Con EstadoActividad tipado como unión, esto compila sin problemas.
+  return etiquetaEstado(actividad.estado);
+}
+
 export function tituloDestacada(actividad: ActividadDestacada): string {
   return actividad.nombre;
 }

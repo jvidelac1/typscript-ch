@@ -12,10 +12,19 @@ export interface Reserva {
   notas?: string;
 }
 
-export function marcarComoConfirmada(reserva: Reserva): void {
+export function marcarComoConfirmada(reserva: Reserva): Reserva {
   // ─── Ejercicio 4 · readonly ───────────────────────────────────────────
   // `id` es readonly: no se puede reasignar.
-  // En vez de mutar el id, cambiá el estado (o devolvé un objeto nuevo).
-  reserva.id = 0;
-  reserva.estado = "confirmada";
+ 
+  return {
+    ...reserva,
+    estado: "confirmada",
+  }
 }
+
+// {
+//   actividad: Actividad;
+//   profesional: Profesional;
+//   estado: EstadoReserva;
+//   notas?: string;
+// }

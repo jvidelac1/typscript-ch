@@ -6,8 +6,12 @@ export type EstadoCarga =
 
 export function mensajeCarga(resultado: EstadoCarga): string {
   // ─── Ejercicio 6 · unión discriminada ─────────────────────────────────
-  // `mensaje` solo existe cuando estado es "error".
-  // Pista: usá un switch o un if sobre resultado.estado antes de acceder
-  // a `datos` o a `mensaje`.
-  return resultado.mensaje;
+  switch(resultado.estado) {
+    case "cargando":
+      return "Cargando...";
+    case "exito":
+      return "Carga exitosa";
+    case "error":
+      return resultado.mensaje;
+  }
 }

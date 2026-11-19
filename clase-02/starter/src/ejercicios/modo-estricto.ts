@@ -1,7 +1,6 @@
-// Ejercicios de la clase 2 resueltos: el modo estricto en acción.
-//
-// Todos los ejemplos salen del material. En el starter este archivo tiene
-// errores a propósito; acá está la versión corregida.
+// Ejercicios de la clase 1b (modo estricto), ya resueltos.
+// Los traemos al proyecto para no perder el material de esa clase.
+// Los ejercicios de ESTA clase (interfaces / modelos) están en src/models/.
 // Este archivo no se importa desde main.ts: solo lo revisa `npx tsc --noEmit`.
 // Usamos `export` para que TypeScript no marque las funciones como "sin usar".
 
