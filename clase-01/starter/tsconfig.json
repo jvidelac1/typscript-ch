@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
+    // Version de JS que se asume como destino. es2023 = JS moderno
+    // asi TS no tiene que bajar la sintaxis a JS antiguo
     "target": "es2023",
+    // habilita los import/export de JS moderno
     "module": "esnext",
     "lib": ["ES2023", "DOM"],
     "types": ["vite/client"],
+    // permite usar extensiones arbitrarias como .ts .vue 
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
 
@@ -11,6 +15,7 @@
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
+    // Trata cada file como un modulo independiente, aunque no import/export. Evita choques entre nombres de archivos
     "moduleDetection": "force",
     "noEmit": true,
 

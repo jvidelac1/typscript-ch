@@ -4,6 +4,32 @@ import typescriptLogo from './assets/typescript.svg'
 import viteLogo from './assets/vite.svg'
 import { setupCounter } from './counter.ts'
 
+// camelCase -> camel Case
+// snake_case -> snake_case
+// PascalCase -> PascalCase
+// CONSTANT_CASE -> CONSTANT_CASE
+
+// 1. Variables tipadas(anotacion explicitas)
+const PROJECT_NAME: string = "Mi primera aplicación Full Stack en TypeScript"
+const DESCRIPTION: string = "Proyecto desarrollado con HTML, CSS & Typescript"
+
+// 2. Inferencia: TS deduce el tipo de la variable
+let clicks = 0;
+
+// 3. Functions y parametros con retorno tipado
+
+function createMessage(quantity: number): string {
+  if(quantity === 1) {
+    return "Mi app de TypeScript funciona correctamente"
+  }
+
+  return `Mi app de TypeScript funciona correctamente ${quantity} veces`;
+}
+
+function greeting(name: string = "Invitado"): string {
+  return `Hola ${name}, bienvenido a mi app de TypeScript`;
+}
+
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <section id="center">
   <div class="hero">
@@ -56,5 +82,5 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <div class="ticks"></div>
 <section id="spacer"></section>
 `
-
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+let btn = document.querySelector<HTMLButtonElement>('#counter')!;
+setupCounter(btn);

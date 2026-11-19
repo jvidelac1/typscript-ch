@@ -17,19 +17,19 @@ export function setupCounter(element: HTMLButtonElement) {
 // let disponible = true;
 
 
-interface Product {
-  name: string;
-  price: number;
-  description: string;
-  image?: string;
-  category: string;
-  brand: string;
-  rating: number;
-  numReviews?: number;
-  countInStock: number; // 10
-  isFeatured: boolean;
-  isNew: boolean; // verdadero - falso
-}
+// interface Product {
+//   name: string;
+//   price: number;
+//   description: string;
+//   image?: string;
+//   category: string;
+//   brand: string;
+//   rating: number;
+//   numReviews?: number;
+//   countInStock: number; // 10
+//   isFeatured: boolean;
+//   isNew: boolean; // verdadero - falso
+// }
 
 // const boton = document.querySelector("#botonConfirmarComp");
 
