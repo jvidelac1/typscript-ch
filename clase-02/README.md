@@ -1,14 +1,15 @@
-# Clase 2: El compilador y el modo estricto
+# Clase 2: Interfaces y modelado de datos
 
-En esta clase seguimos con **el mismo proyecto de la clase 1**. Esta vez no creamos nada nuevo: aprendimos a **leer y configurar las reglas** que TypeScript aplica sobre nuestro código. Abrimos el archivo `tsconfig.json`, activamos el **modo estricto** de forma explícita y corregimos errores con los ejemplos del material.
+En esta clase seguimos con **el mismo proyecto** y le agregamos una **capa de modelos**. Aprendimos a describir entidades con `interface` y `type`, a relacionarlas por composición, a tipar colecciones y a separar los datos que llegan de afuera (DTO + mapper) de los que usa la aplicación. También vimos uniones de literales, uniones discriminadas y nombres que se entienden solos.
+
+Este es el contenido de la **Semana 2** de Staff (Módulo 2 del material, páginas 64 a 121), incluida la consigna de la **Preentrega 2**.
 
 ## Qué hay en esta carpeta
 
 | Carpeta / archivo | Qué es |
 |---|---|
-| [`starter/`](starter) | El proyecto como terminó la clase 1, más un archivo de ejercicios con errores a propósito. Es el punto de partida. |
-| [`completo/`](completo) | Cómo queda el proyecto al terminar la clase: `tsconfig.json` comentado, un módulo nuevo y los ejercicios resueltos. |
-| [`clase-02-typescript.pptx`](clase-02-typescript.pptx) | La presentación de la clase. |
+| [`starter/`](starter) | El proyecto como quedó con el modo estricto, más los modelos con huecos y errores a propósito. Es el punto de partida. |
+| [`completo/`](completo) | Cómo queda al terminar la clase: modelos resueltos, un catálogo en pantalla y un README que documenta las entidades. Sirve también como ejemplo de la Preentrega 2. |
 
 ## Cómo correr los proyectos
 
@@ -20,208 +21,180 @@ npm run dev          # levanta la app en http://localhost:5173
 npx tsc --noEmit     # revisa los tipos de todo el proyecto
 ```
 
-> En el `starter`, `npx tsc --noEmit` muestra **7 errores**. Es a propósito: son los ejercicios de la clase.
+> En el `starter`, `npx tsc --noEmit` muestra **10 errores**. Es a propósito: son los ejercicios de la clase. `npm run dev` anda igual, porque `main.ts` todavía no importa esos archivos.
 
 ## Lo que vimos en clase
 
-### 1. El compilador: `tsc`
+### 1. Modelar datos: `interface` y `type`
 
-`tsc` (*TypeScript Compiler*) es la herramienta que **analiza** los archivos `.ts` y comprueba que respeten las reglas de tipos. También **puede transformar** TypeScript en JavaScript, según cómo esté configurado.
+**Modelar** es decidir qué información representa la aplicación y cómo se organiza. TypeScript nos da dos herramientas:
 
-```ts
-const nombre: string = "Lucía";
-const precio: number = 15000;
-
-const otroPrecio: number = "15000"; // ❌ Error: un string no es asignable a number
-```
-
-| Comando | Qué hace |
-|---|---|
-| `npx tsc` | Comprueba los archivos y, cuando corresponde, genera JavaScript |
-| `npx tsc --noEmit` | Solo comprueba. No genera archivos |
-
-> ⚠️ Que `tsc` no encuentre errores **no significa que el programa funcione**. El compilador analiza el código, pero no reemplaza probar la app.
-
-### 2. El archivo `tsconfig.json`
-
-Es la configuración que TypeScript usa para trabajar con el proyecto. Define:
-
-- qué archivos se analizan,
-- qué reglas de tipado se aplican,
-- qué partes del lenguaje están disponibles,
-- cómo se manejan los módulos,
-- si se generan archivos JavaScript.
-
-Las partes principales:
-
-| Parte | Para qué sirve |
-|---|---|
-| `compilerOptions` | El objeto con todas las reglas |
-| `include` | Qué carpetas se analizan. El nuestro: solo `src` |
-| `exclude` | Saca archivos de esa selección. Ojo: un archivo excluido entra igual si otro archivo incluido lo importa |
-
-> 💡 **No reemplaces el `tsconfig.json` que creó Vite** por uno copiado de otro lado. Las opciones dependen de las herramientas que usa cada proyecto. Primero hay que entenderlo.
-
-En [`completo/tsconfig.json`](completo/tsconfig.json) tenés **cada opción comentada**.
-
-### 3. Las opciones principales
-
-No hace falta memorizarlas, pero sí reconocerlas:
-
-| Opción | En nuestro proyecto | Qué hace |
-|---|---|---|
-| `target` | `"es2023"` | Hacia qué versión de JavaScript se transforma el código |
-| `lib` | `["ES2023", "DOM"]` | Qué tipos están disponibles. `DOM` es lo que hace que TypeScript conozca `document`, `window`, `HTMLElement`... |
-| `module` | `"esnext"` | El sistema de módulos: `import` y `export` |
-| `moduleResolution` | `"bundler"` | Cómo TypeScript encuentra el archivo de cada `import`. `"bundler"` está pensado para herramientas como Vite |
-
-**Un módulo** es un archivo que exporta algo para que otro lo use:
+- `interface`: un contrato para la forma de un objeto.
+- `type`: un nombre para un tipo. Sirve para objetos, pero también para uniones, literales y otras combinaciones.
 
 ```ts
-// src/utils/calculos.ts
-export function calcularTotal(precio: number, cantidad: number): number {
-  return precio * cantidad;
-}
-```
-
-```ts
-// src/main.ts
-import { calcularTotal } from "./utils/calculos";
-
-const total = calcularTotal(15000, 2); // 30000
-```
-
-### 4. El modo estricto: `strict`
-
-```json
-"strict": true
-```
-
-Activa un conjunto de comprobaciones más exigentes. **No obliga a escribir todos los tipos**: la inferencia sigue funcionando. Vimos tres de sus reglas:
-
-#### `noImplicitAny`: nada de `any` escondido
-
-Si TypeScript no puede deducir un tipo, no lo deja pasar como `any`.
-
-```ts
-function mostrarProducto(nombre) { }               // ❌ nombre sería any
-function mostrarProducto(nombre: string): void { }  // ✅
-```
-
-> `void` significa que la función no devuelve un valor útil.
-
-#### `strictNullChecks`: `null` no se cuela
-
-Si una variable puede estar vacía, hay que decirlo y comprobarlo antes de usarla.
-
-```ts
-let nombreUsuario: string = "Martina";
-nombreUsuario = null; // ❌ Error
-
-let otroUsuario: string | null = null; // ✅ puede ser texto o null
-if (otroUsuario !== null) {
-  console.log(otroUsuario.toUpperCase());
-}
-```
-
-> Ya lo usamos en la clase 1: el `if (app)` después del `querySelector`.
-
-#### `strictPropertyInitialization`: las propiedades necesitan valor
-
-```ts
-class Producto {
-  nombre: string; // ❌ no tiene un valor inicial garantizado
-}
-
-class Producto {
+export interface Categoria {
+  readonly id: number;
   nombre: string;
-  constructor(nombre: string) {
-    this.nombre = nombre; // ✅ cada producto recibe su nombre al crearse
-  }
+  descripcion?: string; // opcional: puede no estar
+}
+
+export type EstadoActividad = "disponible" | "completa" | "cancelada";
+```
+
+`readonly` marca una propiedad que no se reasigna. El `?` marca una propiedad opcional.
+
+**¿Cuál conviene?** No hay una sola respuesta. Como criterio inicial del material:
+
+- `interface` para entidades u objetos que puedan extenderse.
+- `type` para uniones, literales, funciones u otras combinaciones.
+- Para un objeto simple, las dos sirven. Lo importante es ser consistentes.
+
+Las interfaces se pueden **extender** (`extends`). Los types se pueden **combinar** con una intersección (`&`). TypeScript compara las formas (tipado estructural): si un objeto tiene las propiedades pedidas, es compatible, aunque no haya sido creado "como" esa interfaz.
+
+> Definir una interfaz **no valida** los datos de una API. Solo describe la forma que esperamos. La validación en tiempo de ejecución se ve más adelante en el curso.
+
+### 2. Composición, colecciones y DTO
+
+**Composición** es armar una entidad con otras que ya definimos. Una reserva *tiene* una actividad y un profesional; no hereda de ellos:
+
+```ts
+export interface Reserva {
+  readonly id: number;
+  actividad: Actividad;
+  profesional: Profesional;
+  estado: EstadoReserva;
+  notas?: string;
 }
 ```
 
-> Las clases las vemos más adelante en el curso.
+También se puede relacionar por identificador (`actividadId: number`) cuando no hace falta embeber todo el objeto.
 
-#### Dato importante sobre nuestro proyecto
+Una **colección tipada** es un array de un modelo, por ejemplo `Actividad[]`. Sobre esa lista se puede filtrar, consultar o transformar con una función tipada. El resultado de `filter` sigue siendo `Actividad[]`.
 
-En nuestro `tsconfig.json` original **no aparece** `"strict": true`... pero el modo estricto **igual está activo**: en TypeScript 7 viene activado por defecto. En la clase lo agregamos para que el archivo diga lo que hace.
+Cuando los datos vienen de afuera, los nombres suelen ser distintos. Un **DTO** (*Data Transfer Object*) describe esa forma externa. Un **mapper** es la función que la transforma a nuestro **modelo de dominio**:
 
-### 5. Otras configuraciones útiles
+```ts
+export interface ActividadDTO {
+  activity_id: number;
+  activity_name: string;
+  price_amount: number;
+  // ...
+}
 
-| Opción | Qué detecta |
-|---|---|
-| `noUnusedLocals` | Variables que declarás y nunca usás |
-| `noUnusedParameters` | Parámetros que una función recibe y no usa |
-| `noEmit` | No es un detector: hace que `tsc` solo compruebe, sin generar `.js`. La transformación la hace Vite |
+export function mapearActividad(datos: ActividadDTO, categoria: Categoria): Actividad {
+  return {
+    id: datos.activity_id,
+    nombre: datos.activity_name,
+    precio: datos.price_amount,
+    // ...
+    categoria,
+  };
+}
+```
 
-Por eso el script `build` es `tsc && vite build`: **`tsc` revisa** los tipos y, si no hay errores, **Vite arma** la carpeta `dist/`.
+Así, si la API cambia un nombre, se actualiza el mapper y no toda la aplicación. No hace falta una API real: se puede trabajar con un objeto de ejemplo. Si las dos formas ya son iguales, no es obligatorio inventar un DTO.
 
-### 6. ¿Quién hace qué? TypeScript y Vite
+Organizamos las definiciones en `src/models/` y las importamos con `import type` cuando solo necesitamos el tipo.
 
-| TypeScript | Vite |
-|---|---|
-| Comprueba los tipos del código | Da el servidor de desarrollo |
-| Analiza las reglas configuradas | Procesa los módulos de la aplicación |
-| Detecta incompatibilidades de tipos | Transforma TypeScript para ejecutarlo |
-| Puede generar JavaScript | Genera los archivos optimizados para producción |
+### 3. Uniones, literales y nombres
 
-> Algunos proyectos de Vite tienen tres archivos: `tsconfig.json`, `tsconfig.app.json` y `tsconfig.node.json`. El nuestro tiene uno solo. **La estructura puede variar** según la versión y la plantilla.
+Un `string` acepta cualquier texto. Una **unión de literales** acepta solo los valores que listamos:
+
+```ts
+export type EstadoReserva = "pendiente" | "confirmada" | "cancelada";
+```
+
+Una **unión discriminada** describe objetos con formas distintas, usando una propiedad literal (el discriminante) para distinguirlos:
+
+```ts
+export type EstadoCarga =
+  | { estado: "cargando" }
+  | { estado: "exito"; datos: string[] }
+  | { estado: "error"; mensaje: string };
+```
+
+Antes de acceder a `datos` o a `mensaje`, hay que comprobar `resultado.estado`. Si no, TypeScript marca error: esa propiedad no existe en todas las variantes.
+
+Los nombres tienen que hablar del **dominio** (Actividad, Reserva, EstadoReserva), no de nombres vacíos como `Data` o `Info`. Las interfaces van en PascalCase, sin el prefijo `I`.
 
 ## 🛠️ Ejercicios
 
-En [`starter/src/ejercicios/modo-estricto.ts`](starter/src/ejercicios/modo-estricto.ts) hay 6 ejercicios con los ejemplos del material. Copiá ese archivo a tu proyecto (en la misma ruta) y corré:
+En `starter/src/models/` y `starter/src/utils/mapearActividad.ts` están los huecos. Corré:
 
 ```bash
 npx tsc --noEmit
 ```
 
-Corregí los errores de a uno, hasta que el comando no muestre nada.
+Corregí los errores de a uno, hasta que el comando no muestre nada. Las soluciones están en `completo/`. Intentá resolverlos antes de mirarlas.
 
-| # | Regla | Errores |
-|---|---|---|
-| 1 | `noImplicitAny` | 3 |
-| 2 | `strictNullChecks` | 1 |
-| 3 | `strictPropertyInitialization` | 1 |
-| 4 | `noUnusedLocals` | 1 |
-| 5 | `noUnusedParameters` | 1 |
-| 6 | `any` | **0... y ese es el problema** |
+| # | Archivo | Tema | Errores |
+|---|---|---|---|
+| 1 | `models/profesional.ts` | Tipar un parámetro con una `interface` | 1 (TS7006) |
+| 2 | `models/actividad.ts` | `type` + unión de literales | 1 (TS2345) |
+| 3 | `models/actividad.ts` | Composición con `Categoria` | 1 (TS2339) |
+| 4 | `models/reserva.ts` | `readonly` (no reasignar `id`) | 1 (TS2540) |
+| 5 | `utils/mapearActividad.ts` | DTO + mapper | 1 (TS2740) |
+| 6 | `models/estado-carga.ts` | Unión discriminada (narrowing) | 1 (TS2339) |
+| 7 | `models/actividad.ts` | `extends` en una interfaz | 1 (TS2339) |
+| 8 | `models/colecciones.ts` | Array y función tipada | 3 (TS7006) |
 
-El ejercicio 6 compila sin errores, pero falla en el navegador: `any` apaga las comprobaciones de TypeScript. Las soluciones están en [`completo/src/ejercicios/modo-estricto.ts`](completo/src/ejercicios/modo-estricto.ts). Intentá resolverlos antes de mirarlas.
-
-> 🧪 **Probá esto:** corré `npx tsc --noEmit --strict false` en el `starter`. De 7 errores quedan solo 2. Los otros 5 **siguen en el código**: apagar `strict` no los arregla, los esconde.
+Cuando `tsc` quede limpio, importá los modelos en `src/main.ts` y mostrá el catálogo (actividades, un filtro, el DTO mapeado y las reservas). El `completo/` muestra una forma de hacerlo. Después, `npm run build` tiene que pasar.
 
 ## Errores frecuentes
 
 | Tentación | Por qué no |
 |---|---|
-| Desactivar `strict` para que no haya errores | Los errores siguen ahí: solo dejás de verlos |
-| Usar `any` para resolver todo | Compila, pero TypeScript deja de comprobar |
-| Copiar un `tsconfig.json` de otro proyecto | Las opciones dependen de las herramientas de cada proyecto |
-| Pensar que compilar es lo mismo que funcionar | Una respuesta de una API puede fallar aunque `tsc` no marque nada |
+| Usar `any` en los modelos | Compila, pero TypeScript deja de comprobar |
+| Declarar un estado como `string` | Admite valores que la aplicación no reconoce |
+| Pensar que la interfaz valida lo que llega de una API | Solo describe la forma; no revisa los datos en tiempo de ejecución |
+| Extender una interfaz para decir "tiene un" | Si una reserva *tiene* una actividad, es composición, no `extends` |
+| Devolver el DTO como si fuera el modelo | Los nombres no coinciden: hay que mapear |
+| Acceder a `mensaje` o `datos` sin mirar el discriminante | Esa propiedad no existe en todas las variantes de la unión |
 
 ## Glosario rápido
 
-- **`tsc`:** el compilador de TypeScript. Revisa los tipos y puede generar JavaScript.
-- **`tsconfig.json`:** el archivo de configuración de TypeScript.
-- **`compilerOptions`:** el objeto del `tsconfig.json` con todas las reglas.
-- **Modo estricto (`strict`):** un conjunto de comprobaciones más exigentes.
-- **`any`:** un tipo que apaga las comprobaciones. Lo evitamos.
-- **`void`:** el tipo de retorno de una función que no devuelve nada útil.
-- **`string | null`:** "puede ser un texto o `null`".
-- **Módulo:** un archivo que exporta algo (`export`) para que otro lo importe (`import`).
+- **`interface`:** contrato de un objeto (qué propiedades tiene y de qué tipo).
+- **`type`:** un nombre para un tipo. Útil para uniones y literales.
+- **`readonly`:** la propiedad no se reasigna.
+- **Propiedad opcional (`?`):** puede no estar.
+- **Composición:** una entidad contiene otra (`actividad: Actividad`).
+- **`extends`:** una interfaz reutiliza las propiedades de otra.
+- **DTO:** la forma de los datos que se intercambian (por ejemplo, con una API).
+- **Modelo de dominio:** la forma que usa internamente nuestra aplicación.
+- **Mapper:** función que transforma un DTO en un modelo de dominio (o al revés).
+- **Unión de literales:** `"pendiente" \| "confirmada" \| "cancelada"`.
+- **Unión discriminada:** unión de objetos con una propiedad literal que los distingue.
+- **`import type`:** importa solo el tipo, no un valor.
 
 ## ✅ Checklist de la clase
 
-- [ ] Reconozco qué hace el compilador de TypeScript
-- [ ] Entiendo la estructura general de `tsconfig.json`
-- [ ] Identifico `target`, `lib`, `module` y `moduleResolution`
-- [ ] Agregué `"strict": true` a mi `tsconfig.json`
-- [ ] Separé `calcularTotal` en `src/utils/calculos.ts`
-- [ ] Corregí los ejercicios: `npx tsc --noEmit` no muestra errores
-- [ ] Sé qué hace TypeScript y qué hace Vite
+- [ ] Sé cuándo usar `interface` y cuándo usar `type`
+- [ ] Usé `readonly` y propiedades opcionales
+- [ ] Relacioné entidades por composición
+- [ ] Tipé un array y una función que lo filtra o consulta
+- [ ] Armé un DTO y un mapper
+- [ ] Usé una unión de literales y una unión discriminada
+- [ ] Organicé los modelos en `src/models/`
+- [ ] `npx tsc --noEmit` no muestra errores y `npm run build` genera `dist/`
+
+## Preentrega 2
+
+La Preentrega 2 pide incorporar esta capa de modelos **a tu propio proyecto**, con tu temática (no hace falta copiar "Yoga" y "Pilates"). El `completo/` es un ejemplo que cubre lo que pide la consigna:
+
+- al menos tres interfaces relacionadas, con `readonly` y opcionales
+- un `type` con unión de literales
+- al menos una composición
+- un array tipado con tres o más elementos y una función tipada que lo use
+- un DTO y su mapper
+- archivos organizados y reutilizables
+- README que explica las entidades y por qué se usó `interface` o `type`
+- modo estricto, sin `any` en los modelos, y `npm run build` sin errores
+
+La entrega oficial es el enlace a tu repositorio público de GitHub (el mismo de la Preentrega 1). No se pide PDF, Word ni ZIP. No hay que conectar una API ni Firebase.
 
 ## Para la próxima clase
 
-- **Tarea:** terminá los 6 ejercicios y dejá tu `tsconfig.json` comentado con tus palabras: un comentario `//` arriba de cada opción.
-- **Próximo tema:** Git y GitHub. Vamos a subir este mismo proyecto a un repositorio público.
+- **Tarea:** terminá los 8 ejercicios, mostrá el catálogo en tu `main.ts` y dejá documentadas las entidades en el README del proyecto.
+- **Preentrega 2:** aplicá lo mismo a *tu* temática y publicá los cambios en GitHub cuando el repo esté listo.
+- **Próximo tema (oficial):** TypeScript aplicado al DOM, eventos y formularios (Módulo 3).

@@ -44,3 +44,83 @@ button:hover {
 .total {
   color: #8be9fd;
 }
+
+
+h2 {
+  color: #8be9fd;
+  margin-top: 48px;
+}
+
+.catalogo {
+  text-align: left;
+  margin-top: 16px;
+}
+
+.pista,
+.carga,
+.origen,
+.meta {
+  color: #f8f8f2;
+  opacity: 0.85;
+}
+
+.pista code {
+  color: #ffb86c;
+}
+
+.grilla {
+  display: grid;
+  gap: 16px;
+}
+
+.tarjeta {
+  padding: 16px 20px;
+  background-color: #282a36;
+  border-radius: 8px;
+}
+
+.tarjeta h3 {
+  margin: 0 0 8px;
+  color: #bd93f9;
+}
+
+.estado {
+  display: inline-block;
+  margin: 8px 0;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.estado-disponible,
+.estado-confirmada {
+  background-color: #50fa7b;
+  color: #282a36;
+}
+
+.estado-completa,
+.estado-pendiente {
+  background-color: #f1fa8c;
+  color: #282a36;
+}
+
+.estado-cancelada,
+.estado-error {
+  background-color: #ff5555;
+  color: #f8f8f2;
+}
+
+.reservas {
+  padding-left: 20px;
+}
+
+.reservas li {
+  margin-bottom: 10px;
+}
+
+.reservas em {
+  display: block;
+  opacity: 0.8;
+}

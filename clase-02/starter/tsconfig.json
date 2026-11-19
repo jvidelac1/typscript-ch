@@ -1,24 +1,88 @@
+// tsconfig.json: la configuración de TypeScript para este proyecto.
+// Le dice a `tsc` (el compilador) qué archivos analizar y qué reglas aplicar.
+// Vite casi no lo usa: él transforma el TS y sirve el JS. El que lo usa de
+// verdad es `tsc` cuando corrés `npx tsc --noEmit` o `npm run build`.
+// Este archivo admite comentarios aunque sea .json (es "JSON con comentarios").
 {
+  // compilerOptions: el objeto con las reglas y el comportamiento de TypeScript.
   "compilerOptions": {
+    // ─── Principales opciones del compilador ────────────────────────────
+
+    // target: versión de JavaScript hacia la que TS puede transformar el código.
+    // es2023 = JS moderno. El valor depende de los navegadores que haya que soportar.
     "target": "es2023",
+
+    // module: el sistema de módulos. esnext = los `import` / `export` de JS moderno.
+    // Es lo que nos deja separar el código en archivos (ver src/utils/calculos.ts).
     "module": "esnext",
+
+    // lib: qué definiciones de tipos están disponibles.
+    //  - ES2023: el lenguaje (Array, Promise, String, etc.).
+    //  - DOM: el navegador (document, window, HTMLElement, HTMLInputElement, fetch...).
+    // Sin "DOM", TS marcaría `document` como error.
     "lib": ["ES2023", "DOM"],
+
+    // Tipos extra que se cargan automáticamente. "vite/client" le enseña a
+    // TS que `import "./style.css"` es válido, entre otras cosas de Vite.
     "types": ["vite/client"],
+
+    // Permite importar archivos que no son .ts/.js (como el .css).
     "allowArbitraryExtensions": true,
+
+    // No revisa los tipos de las librerías de node_modules, solo tu código.
     "skipLibCheck": true,
 
-    /* Bundler mode */
+    // ─── Modo "bundler": quien arma el proyecto es Vite ─────────────────
+
+    // moduleResolution: cómo TS encuentra el archivo de cada `import`.
+    // "bundler" está pensado para herramientas como Vite.
     "moduleResolution": "bundler",
+
+    // Permite escribir `import "./algo.ts"` con la extensión .ts.
     "allowImportingTsExtensions": true,
+
+    // Los `import` y `export` se dejan tal cual se escribieron.
+    // Obliga a marcar con `import type` lo que es solo un tipo.
     "verbatimModuleSyntax": true,
+
+    // Trata cada archivo como un módulo independiente, aunque no tenga
+    // `import` ni `export`. Evita choques de nombres entre archivos.
     "moduleDetection": "force",
+
+    // noEmit: tsc solo comprueba los tipos, no genera archivos .js.
+    // La transformación y el empaquetado los hace Vite.
+    // Es lo mismo que pasar `--noEmit` en la terminal.
     "noEmit": true,
 
-    /* Linting */
+    // ─── El modo estricto ───────────────────────────────────────────────
+
+    // strict: activa un conjunto de comprobaciones más exigentes. Entre ellas:
+    //  - noImplicitAny: error si un valor quedaría como `any` sin que lo digamos.
+    //  - strictNullChecks: obliga a considerar null y undefined.
+    //  - strictPropertyInitialization: las propiedades de una clase tienen
+    //    que tener un valor inicial garantizado.
+    // En TypeScript 7 ya viene activado por defecto: lo escribimos para que
+    // quede explícito. Ver src/ejercicios/modo-estricto.ts.
+    "strict": true,
+
+    // ─── Otras configuraciones útiles ───────────────────────────────────
+
+    // noUnusedLocals: error si declarás una variable local y nunca la usás.
     "noUnusedLocals": true,
+
+    // noUnusedParameters: error si una función recibe un parámetro que no usa.
     "noUnusedParameters": true,
+
+    // Solo permite sintaxis de TS que se pueda borrar sin dejar código
+    // (los tipos desaparecen y queda JS puro). Prohíbe cosas como `enum`.
     "erasableSyntaxOnly": true,
+
+    // En un `switch`, error si un `case` sigue de largo al siguiente sin `break`.
     "noFallthroughCasesInSwitch": true
   },
+
+  // include: qué archivos o carpetas analiza el compilador. Acá, solo src/.
+  // También existe "exclude" (por ejemplo ["node_modules", "dist"]) para sacar
+  // archivos de esa selección. No lo necesitamos: con include ya alcanza.
   "include": ["src"]
 }
