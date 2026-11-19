@@ -8,8 +8,8 @@ Este es el contenido de la **Semana 2** de Staff (Módulo 2 del material, págin
 
 | Carpeta / archivo | Qué es |
 |---|---|
-| [`starter/`](starter) | El proyecto como quedó con el modo estricto, más los modelos con huecos y errores a propósito. Es el punto de partida. |
-| [`completo/`](completo) | Cómo queda al terminar la clase: modelos resueltos, un catálogo en pantalla y un README que documenta las entidades. Sirve también como ejemplo de la Preentrega 2. |
+| [`starter/`](starter) | Punto de partida. En clase resolvimos varios modelos; quedan pendientes el mapper y tipar la colección. |
+| [`completo/`](completo) | Cómo queda al terminar: modelos resueltos, catálogo en pantalla y README de las entidades. Ejemplo de la Preentrega 2. |
 | [`apuntes/`](apuntes) | Los apuntes del pizarrón (Excalidraw). |
 | [`clase-02-typescript.pptx`](clase-02-typescript.pptx) | La presentación de la clase. |
 
@@ -23,7 +23,7 @@ npm run dev          # levanta la app en http://localhost:5173
 npx tsc --noEmit     # revisa los tipos de todo el proyecto
 ```
 
-> En el `starter`, `npx tsc --noEmit` muestra **10 errores**. Es a propósito: son los ejercicios de la clase. `npm run dev` anda igual, porque `main.ts` todavía no importa esos archivos.
+> En el `starter`, `npx tsc --noEmit` muestra **4 errores** (lo que quedó pendiente después de la clase). `npm run dev` anda igual, porque `main.ts` todavía no importa esos archivos.
 
 ## Lo que vimos en clase
 
@@ -124,24 +124,24 @@ Los nombres tienen que hablar del **dominio** (Actividad, Reserva, EstadoReserva
 
 ## 🛠️ Ejercicios
 
-En `starter/src/models/` y `starter/src/utils/mapearActividad.ts` están los huecos. Corré:
+En clase resolvimos buena parte de los modelos. Quedan pendientes el **mapper** y tipar la **colección**. Corré:
 
 ```bash
 npx tsc --noEmit
 ```
 
-Corregí los errores de a uno, hasta que el comando no muestre nada. Las soluciones están en `completo/`. Intentá resolverlos antes de mirarlas.
-
-| # | Archivo | Tema | Errores |
+| # | Archivo | Tema | Estado |
 |---|---|---|---|
-| 1 | `models/profesional.ts` | Tipar un parámetro con una `interface` | 1 (TS7006) |
-| 2 | `models/actividad.ts` | `type` + unión de literales | 1 (TS2345) |
-| 3 | `models/actividad.ts` | Composición con `Categoria` | 1 (TS2339) |
-| 4 | `models/reserva.ts` | `readonly` (no reasignar `id`) | 1 (TS2540) |
-| 5 | `utils/mapearActividad.ts` | DTO + mapper | 1 (TS2740) |
-| 6 | `models/estado-carga.ts` | Unión discriminada (narrowing) | 1 (TS2339) |
-| 7 | `models/actividad.ts` | `extends` en una interfaz | 1 (TS2339) |
-| 8 | `models/colecciones.ts` | Array y función tipada | 3 (TS7006) |
+| 1 | `models/profesional.ts` | Tipar un parámetro con una `interface` | Hecho en clase |
+| 2 | `models/actividad.ts` | `type` + unión de literales | Hecho en clase |
+| 3 | `models/actividad.ts` | Composición con `Categoria` | Hecho en clase |
+| 4 | `models/reserva.ts` | `readonly` (no reasignar `id`) | Hecho en clase |
+| 5 | `utils/mapearActividad.ts` | DTO + mapper | Pendiente (1 error) |
+| 6 | `models/estado-carga.ts` | Unión discriminada (narrowing) | Hecho en clase |
+| 7 | `models/actividad.ts` | `extends` en una interfaz | Hecho en clase |
+| 8 | `models/colecciones.ts` | Array y función tipada | Pendiente (3 errores) |
+
+Corregí lo pendiente de a uno hasta que `tsc` no muestre nada. Las soluciones están en `completo/`.
 
 Cuando `tsc` quede limpio, importá los modelos en `src/main.ts` y mostrá el catálogo (actividades, un filtro, el DTO mapeado y las reservas). El `completo/` muestra una forma de hacerlo. Después, `npm run build` tiene que pasar.
 

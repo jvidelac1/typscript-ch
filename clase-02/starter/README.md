@@ -15,7 +15,7 @@ Para revisar los tipos:
 npx tsc --noEmit
 ```
 
-En esta etapa, ese comando muestra errores a propósito: son los ejercicios de `src/models/` y de `src/utils/mapearActividad.ts`. `npm run dev` anda igual.
+En esta etapa quedan errores a propósito en `src/utils/mapearActividad.ts` y `src/models/colecciones.ts` (lo pendiente después de la clase). `npm run dev` anda igual.
 
 ## Modelos
 
